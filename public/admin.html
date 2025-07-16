@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciamento de Usuários - GynMed</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="login-container">
-        <img src="img/logo.png" alt="Logo GynMed" class="logo">
+        <img src="/img/logo.png" alt="Logo GynMed" class="logo">
         <h2>Gerenciamento de Usuários</h2>
 
         <!-- Formulário para criar novo usuário -->
@@ -25,59 +25,87 @@
 
         <!-- Lista de usuários -->
         <h3>Usuários Existentes</h3>
-        <div id="users-list"></div>
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Permissão</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="users-list"></tbody>
+        </table>
 
-        <!-- Link para voltar -->
+        <!-- Links de navegação -->
         <p><a href="/home">Voltar para Home</a></p>
         <p><a href="/logout">Sair</a></p>
 
-        <!-- Mensagens de erro/sucesso -->
-        <p id="mensagem" class="erro"></p>
+        <!-- Mensagem de feedback -->
+        <p id="mensagem" class="mensagem"></p>
     </div>
 
     <script>
         // Carregar lista de usuários
         async function loadUsers() {
-            const response = await fetch('/admin/users', { method: 'GET' });
-            const users = await response.json();
-            const usersList = document.getElementById('users-list');
-            usersList.innerHTML = '';
+            try {
+                const response = await fetch('/admin/users', { method: 'GET', headers: { 'Accept': 'application/json' } });
+                if (!response.ok) throw new Error('Erro ao carregar usuários');
+                const users = await response.json();
+                const usersList = document.getElementById('users-list');
+                usersList.innerHTML = '';
 
-            users.forEach(user => {
-                const userDiv = document.createElement('div');
-                userDiv.innerHTML = `
-                    <p><strong>${user.username}</strong> (Role: ${user.role})</p>
-                    <form action="/admin/users/${user.id}/password" method="POST">
-                        <input type="password" name="newPassword" placeholder="Nova Senha" required>
-                        <button type="submit">Alterar Senha</button>
-                    </form>
-                    <form action="/admin/users/${user.id}/role" method="POST">
-                        <select name="newRole" required>
-                            <option value="usuario" ${user.role === 'usuario' ? 'selected' : ''}>Usuário</option>
-                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
-                        </select>
-                        <button type="submit">Alterar Role</button>
-                    </form>
-                    <hr>
-                `;
-                usersList.appendChild(userDiv);
-            });
+                users.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${user.role}</td>
+                        <td>
+                            <form action="/admin/users/${user.id}/password" method="POST" class="form-inline">
+                                <input type="password" name="newPassword" placeholder="Nova Senha" required>
+                                <button type="submit">Alterar Senha</button>
+                            </form>
+                            <form action="/admin/users/${user.id}/role" method="POST" class="form-inline">
+                                <select name="newRole" required>
+                                    <option value="usuario" ${user.role === 'usuario' ? 'selected' : ''}>Usuário</option>
+                                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
+                                </select>
+                                <button type="submit">Alterar Role</button>
+                            </form>
+                        </td>
+                    `;
+                    usersList.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Erro:', err.message);
+                showMessage('Erro ao carregar usuários', 'erro');
+            }
         }
 
         // Exibir mensagens de erro/sucesso
+        function showMessage(text, type) {
+            const mensagemDiv = document.getElementById('mensagem');
+            mensagemDiv.className = `mensagem ${type}`;
+            mensagemDiv.textContent = text;
+            setTimeout(() => mensagemDiv.textContent = '', 5000); // Limpa após 5 segundos
+        }
+
+        // Processar parâmetros de URL para mensagens
         const urlParams = new URLSearchParams(window.location.search);
         const erro = urlParams.get('erro');
         const sucesso = urlParams.get('sucesso');
-        const mensagemDiv = document.getElementById('mensagem');
         if (erro) {
-            mensagemDiv.style.color = 'red';
-            mensagemDiv.textContent = erro === 'usuario_existe' ? 'Usuário já existe' : 
-                                     erro === 'role_invalido' ? 'Permissão inválida' : 'Erro no servidor';
+            showMessage(
+                erro === 'usuario_existe' ? 'Usuário já existe' :
+                erro === 'role_invalido' ? 'Permissão inválida' : 'Erro no servidor',
+                'erro'
+            );
         } else if (sucesso) {
-            mensagemDiv.style.color = 'green';
-            mensagemDiv.textContent = sucesso === 'usuario_criado' ? 'Usuário criado com sucesso' :
-                                     sucesso === 'senha_atualizada' ? 'Senha atualizada com sucesso' :
-                                     'Permissão atualizada com sucesso';
+            showMessage(
+                sucesso === 'usuario_criado' ? 'Usuário criado com sucesso' :
+                sucesso === 'senha_atualizada' ? 'Senha atualizada com sucesso' :
+                'Permissão atualizada com sucesso',
+                'sucesso'
+            );
         }
 
         // Carregar usuários ao abrir a página

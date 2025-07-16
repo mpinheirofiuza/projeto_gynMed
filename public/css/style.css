@@ -61,3 +61,64 @@ button:hover {
   font-size: 14px;
   margin-top: 10px;
 }
+
+/* Estilos para admin.html */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: white;
+  color: black;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.users-table th,
+.users-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.users-table th {
+  background-color: #0b5ed7;
+  color: white;
+}
+
+.users-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.form-inline {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.form-inline input,
+.form-inline select {
+  margin: 0;
+}
+
+.form-inline button {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.mensagem {
+  font-size: 14px;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.mensagem.erro {
+  background-color: #ffe6e6;
+  color: red;
+}
+
+.mensagem.sucesso {
+  background-color: #e6ffe6;
+  color: green;
+}
