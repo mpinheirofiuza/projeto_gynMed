@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários - GynMed</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <img src="img/logo.png" alt="Logo GynMed" class="logo">
+        <h2>Gerenciamento de Usuários</h2>
+
+        <!-- Formulário para criar novo usuário -->
+        <h3>Criar Novo Usuário</h3>
+        <form action="/admin/users" method="POST">
+            <input type="text" name="username" placeholder="Usuário" required>
+            <input type="password" name="password" placeholder="Senha" required>
+            <select name="role" required>
+                <option value="usuario">Usuário</option>
+                <option value="admin">Administrador</option>
+            </select>
+            <button type="submit">Criar Usuário</button>
+        </form>
+
+        <!-- Lista de usuários -->
+        <h3>Usuários Existentes</h3>
+        <div id="users-list"></div>
+
+        <!-- Link para voltar -->
+        <p><a href="/home">Voltar para Home</a></p>
+        <p><a href="/logout">Sair</a></p>
+
+        <!-- Mensagens de erro/sucesso -->
+        <p id="mensagem" class="erro"></p>
+    </div>
+
+    <script>
+        // Carregar lista de usuários
+        async function loadUsers() {
+            const response = await fetch('/admin/users', { method: 'GET' });
+            const users = await response.json();
+            const usersList = document.getElementById('users-list');
+            usersList.innerHTML = '';
+
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.innerHTML = `
+                    <p><strong>${user.username}</strong> (Role: ${user.role})</p>
+                    <form action="/admin/users/${user.id}/password" method="POST">
+                        <input type="password" name="newPassword" placeholder="Nova Senha" required>
+                        <button type="submit">Alterar Senha</button>
+                    </form>
+                    <form action="/admin/users/${user.id}/role" method="POST">
+                        <select name="newRole" required>
+                            <option value="usuario" ${user.role === 'usuario' ? 'selected' : ''}>Usuário</option>
+                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
+                        </select>
+                        <button type="submit">Alterar Role</button>
+                    </form>
+                    <hr>
+                `;
+                usersList.appendChild(userDiv);
+            });
+        }
+
+        // Exibir mensagens de erro/sucesso
+        const urlParams = new URLSearchParams(window.location.search);
+        const erro = urlParams.get('erro');
+        const sucesso = urlParams.get('sucesso');
+        const mensagemDiv = document.getElementById('mensagem');
+        if (erro) {
+            mensagemDiv.style.color = 'red';
+            mensagemDiv.textContent = erro === 'usuario_existe' ? 'Usuário já existe' : 
+                                     erro === 'role_invalido' ? 'Permissão inválida' : 'Erro no servidor';
+        } else if (sucesso) {
+            mensagemDiv.style.color = 'green';
+            mensagemDiv.textContent = sucesso === 'usuario_criado' ? 'Usuário criado com sucesso' :
+                                     sucesso === 'senha_atualizada' ? 'Senha atualizada com sucesso' :
+                                     'Permissão atualizada com sucesso';
+        }
+
+        // Carregar usuários ao abrir a página
+        loadUsers();
+    </script>
+</body>
+</html>
