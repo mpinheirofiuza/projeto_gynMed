@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="login-container">
+    <img src="img/logo.png" alt="Logo" class="logo">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+      <input type="text" name="username" placeholder="Usuário" required>
+      <input type="password" name="password" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+    </form>
+    <p id="mensagem-erro" class="erro"></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const erro = params.get('erro');
+    const msgErro = document.getElementById('mensagem-erro');
+
+    if (erro === 'usuario') msgErro.textContent = 'Usuário não encontrado!';
+    if (erro === 'senha') msgErro.textContent = 'Senha incorreta!';
+  </script>
+</body>
+</html>
