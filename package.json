@@ -20,6 +20,7 @@
   "homepage": "https://github.com/mpinheirofiuza/projeto_gynMed#readme",
   "dependencies": {
     "bcryptjs": "^3.0.2",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-session": "^1.18.1"
   }
 }
