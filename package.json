@@ -1,0 +1,25 @@
+{
+  "name": "projeto_gynmed",
+  "version": "1.0.0",
+  "description": "Projeto para o sistema GynMed que irá suprir todas as necessidades e especificidades da empresa.\r Criado por Matheus Pinheiro Fiuza.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mpinheirofiuza/projeto_gynMed.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mpinheirofiuza/projeto_gynMed/issues"
+  },
+  "homepage": "https://github.com/mpinheirofiuza/projeto_gynMed#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0"
+  }
+}
