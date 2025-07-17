@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background-color: #f0f2f5;
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +12,7 @@ body {
 
 /* Container principal */
 .login-container {
-  background-color: #07135B;
+  background-color: #030B61;
   color: white;
   padding: 30px 40px;
   border-radius: 10px;
@@ -23,8 +23,8 @@ body {
 
 /* Logo */
 .logo {
-  max-width: 120px;
-  margin-bottom: 20px;
+  max-width: 200px;
+  margin-bottom: 60px;
 }
 
 /* Campos de entrada */
@@ -41,7 +41,7 @@ input[type="password"] {
 /* Botão */
 button {
   width: 100%;
-  background-color: #0b5ed7;
+  background-color: #0614B3;
   color: white;
   padding: 12px;
   border: none;
@@ -52,7 +52,7 @@ button {
 }
 
 button:hover {
-  background-color: #084fc4;
+  background-color: #212529;
 }
 
 /* Mensagem de erro */
